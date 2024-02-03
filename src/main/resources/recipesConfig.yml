@@ -39,14 +39,14 @@ recipe-spawning:
 recipe-book-item:
   material: BOOK
   display_name: '&6&lRecipe Book'
-  lore: [ '&7Right-Click to open your', '&7recipe book!' ]
+  lore: ['&7Right-Click to open your', '&7recipe book!']
   glint: true
 
 # The physical recipe item that will spawn in loot chests
 recipe-item:
   material: PAPER
   name: '&#F7FFC9%recipe% &fRecipe'
-  lore: [ '&7Right-Click to redeem', '&7this recipe!' ]
+  lore: ['&7Right-Click to redeem', '&7this recipe!']
   glint: true
 
 # Full example Gui Border Item
@@ -85,7 +85,7 @@ gui:
       display_name: '&0'
     border2:
       material: GRASS
-      slots: [ 1, 7, 46, 52 ]
+      slots: [1, 7, 46, 52 ]
       display_name: '&0'
     border3:
       material: FERN
