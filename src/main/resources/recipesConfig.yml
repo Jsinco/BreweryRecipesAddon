@@ -64,24 +64,24 @@ gui:
     recipe-item-slots: [19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34]
     total_recipes:
       material: BOOK
-      slots: [ 49 ]
+      slots: [49]
       display_name: '&#f498f6Total Recipes&7: &e%total_recipes%'
       glint: true
     next_page:
       material: ARROW
-      slots: [ 50 ]
+      slots: [50]
       display_name: '&#f498f6Next Page'
-      lore: [ ]
+      lore: []
     previous_page:
       material: ARROW
-      slots: [ 48 ]
+      slots: [48]
       display_name: '&#f498f6Previous Page'
-      lore: [ ]
+      lore: []
   border-items:
     # Border items
     border1:
       material: GREEN_STAINED_GLASS_PANE
-      slots: [ 0, 8, 45, 53 ]
+      slots: [0, 8, 45, 53]
       display_name: '&0'
     border2:
       material: GRASS
@@ -89,15 +89,15 @@ gui:
       display_name: '&0'
     border3:
       material: FERN
-      slots: [ 2, 6, 47, 51 ]
+      slots: [2, 6, 47, 51]
       display_name: '&0'
     border4:
       material: PINK_TULIP
-      slots: [ 3, 5, 48, 50 ]
+      slots: [3, 5, 48, 50]
       display_name: '&0'
     border5:
       material: LILY_PAD
-      slots: [ 4, 49 ]
+      slots: [4, 49]
       display_name: '&0'
 
 # Version for if/when I update the config to have more options
