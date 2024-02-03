@@ -1,11 +1,12 @@
 # Want more configurability? Let me know in our Discord or in the resource discussion section!
 
+
 # If we should register this addon's commands as a brewery subcommand or
 # its own command registered on behalf of Brewery
 # Subcommand: /brewery recipes <args>
 # Command: /breweryrecipes <args>
 # Requires a server restart to take effect
-use-brewery-subcommand: false
+use-brewery-subcommand: true
 # The main permission node for commands is brewery.cmd.recipes
 command-permissions:
   givebook: "breweryrecipes.givebook"

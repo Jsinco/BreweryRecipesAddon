@@ -8,6 +8,7 @@ import com.dre.brewery.api.addons.BreweryAddon;
 import dev.jsinco.recipes.commands.CommandManager;
 import dev.jsinco.recipes.listeners.Events;
 import dev.jsinco.recipes.permissions.*;
+import dev.jsinco.recipes.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
 
 // Idea:
@@ -31,24 +32,27 @@ public class Recipes extends BreweryAddon {
         Recipes.addonFileManager = addonFileManager;
         commandManager = new CommandManager(plugin);
 
-        switch (PermissionSetter.valueOf(Config.get().getString("recipe-saving-method").toUpperCase())) {
-            case PERMISSION_API -> {
-                switch (PermissionAPI.valueOf(Config.get().getString("permissions-api-plugin").toUpperCase())) {
-                    case LUCKPERMS -> {
-                        if (PermissionAPI.LUCKPERMS.checkIfPermissionPluginExists()) {
-                            permissionManager = new LuckPermsPermission();
-                        } else {
-                            goToDefaultPermissionMethod();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            switch (PermissionSetter.valueOf(Config.get().getString("recipe-saving-method").toUpperCase())) {
+                case PERMISSION_API -> {
+                    switch (PermissionAPI.valueOf(Config.get().getString("permissions-api-plugin").toUpperCase())) {
+                        case LUCKPERMS -> {
+                            if (PermissionAPI.LUCKPERMS.checkIfPermissionPluginExists()) {
+                                permissionManager = new LuckPermsPermission();
+                            } else {
+                                goToDefaultPermissionMethod();
+                            }
                         }
                     }
-                }
 
+                }
+                case COMMAND -> permissionManager = new CommandPermission();
             }
-            case COMMAND -> permissionManager = new CommandPermission();
-        }
+        }, 1L);
         Bukkit.getPluginManager().registerEvents(new Events(plugin), plugin);
         registerCommand(true);
-        getLogger().info("Enabled!");
+
+        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &frecipes from Brewery!");
     }
 
     @Override
@@ -56,12 +60,7 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         Util.reloadPrefix();
         registerCommand(false);
-        getLogger().info("Reloaded!");
-    }
-
-    @Override
-    public void onAddonDisable() {
-        getLogger().info("Disabled!");
+        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &frecipes from Brewery!");
     }
 
     public static BreweryPlugin getPlugin() {
