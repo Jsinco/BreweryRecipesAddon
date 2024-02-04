@@ -21,6 +21,7 @@ public class Recipes extends BreweryAddon {
     private static BreweryPlugin plugin;
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
+    private static boolean bukkitPersistence;
 
     public Recipes(BreweryPlugin superPlugin, AddonLogger logger) {
         super(superPlugin, logger);
@@ -30,6 +31,18 @@ public class Recipes extends BreweryAddon {
     @Override
     public void onAddonEnable(AddonFileManager addonFileManager) {
         Recipes.addonFileManager = addonFileManager;
+
+
+        // Version check for when i add in support for versions lower than 1.17
+        // returns something like: 1.18.2-R0.1-SNAPSHOT so we strip it to 1.18.2 then to 18 and check that major version is 17 or higher
+        String versionStripped = Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf("-"));
+        Bukkit.broadcastMessage(versionStripped);
+        String[] versionSplit = versionStripped.split("\\.");
+        versionStripped = versionSplit[1];
+        bukkitPersistence = Integer.parseInt(versionStripped) >= 17;
+
+
+
         commandManager = new CommandManager(plugin);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -98,5 +111,9 @@ public class Recipes extends BreweryAddon {
         Config.get().set("recipe-saving-method", "Command");
         Config.save();
         permissionManager = new CommandPermission();
+    }
+
+    public static boolean isBukkitPersistence() {
+        return bukkitPersistence;
     }
 }

@@ -2,14 +2,13 @@ package dev.jsinco.recipes.listeners
 
 import com.dre.brewery.BreweryPlugin
 import dev.jsinco.recipes.Config
-import dev.jsinco.recipes.guis.GuiItemType
-import dev.jsinco.recipes.guis.PaginatedGui
 import dev.jsinco.recipes.Recipes
 import dev.jsinco.recipes.Util
+import dev.jsinco.recipes.guis.GuiItemType
+import dev.jsinco.recipes.guis.PaginatedGui
 import dev.jsinco.recipes.guis.RecipeGui
 import dev.jsinco.recipes.recipe.RecipeItem
 import dev.jsinco.recipes.recipe.RecipeUtil
-import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -64,7 +63,7 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         if (event.action != Action.RIGHT_CLICK_BLOCK  && event.action != Action.RIGHT_CLICK_AIR) return
         val meta = event.item?.itemMeta ?: return
         val player = event.player
-        if (meta.persistentDataContainer.has(NamespacedKey(plugin, "recipe-book"), PersistentDataType.BOOLEAN)) {
+        if (meta.persistentDataContainer.has(NamespacedKey(plugin, "recipe-book"), PersistentDataType.INTEGER)) {
             RecipeGui(player).openRecipeGui(player)
             event.isCancelled = true
             return

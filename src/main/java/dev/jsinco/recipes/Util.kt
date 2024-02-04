@@ -1,6 +1,7 @@
 package dev.jsinco.recipes
 
 import com.dre.brewery.BreweryPlugin
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -96,8 +97,9 @@ object Util {
             meta.addEnchant(Enchantment.LUCK, 1, true)
         }
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
-        meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-book"), PersistentDataType.BOOLEAN, true)
+        meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-book"), PersistentDataType.INTEGER, 0)
         item.itemMeta = meta
+        Bukkit.broadcastMessage(Bukkit.getVersion() + " " + Bukkit.getBukkitVersion())
         return item
     }
 
