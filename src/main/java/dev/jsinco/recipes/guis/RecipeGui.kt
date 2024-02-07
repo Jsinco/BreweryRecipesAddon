@@ -48,7 +48,8 @@ class RecipeGui(player: Player) : InventoryHolder {
                     page.setItem(slot, arrowItems.first.second)
                 }
 
-            } else if (paginatedGui.indexOf(page) != paginatedGui.size - 1) {
+            }
+            if (paginatedGui.indexOf(page) != paginatedGui.size - 1) {
                 for (slot in arrowItems.second.first) {
                     page.setItem(slot, arrowItems.second.second)
                 }
