@@ -76,11 +76,11 @@ class Events(private val plugin: BreweryPlugin) : Listener {
             player.sendMessage(Util.colorcode("${Util.prefix}You already know this recipe!"))
             return
         }
-
+        event.item!!.amount--
         player.sendMessage(Util.colorcode("${Util.prefix}You have learned the '${event.item?.itemMeta!!.displayName}&#E2E2E2'!"))
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-        event.item!!.amount--
 
-        Recipes.getPermissionManager().setPermission(Config.get().getString("recipe-permission-node")?.replace("%replace%", recipeKey), player, true)
+
+        Recipes.getPermissionManager().setPermission(Config.get().getString("recipe-permission-node")?.replace("%recipe%", recipeKey), player, true)
     }
 }

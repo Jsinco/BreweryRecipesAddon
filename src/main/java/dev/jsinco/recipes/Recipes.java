@@ -10,6 +10,7 @@ import dev.jsinco.recipes.listeners.Events;
 import dev.jsinco.recipes.permissions.*;
 import dev.jsinco.recipes.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 
 // Idea:
 // Allow recipes for brews to be collected from randomly generated chests and make some recipes rarer than others

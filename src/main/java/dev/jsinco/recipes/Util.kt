@@ -103,7 +103,6 @@ object Util {
     }
 
     fun checkForRecipePermission(player: Player, recipeKey: String): Boolean {
-        val recipeKeyFinal = recipeKey.replace(" ", "_").lowercase()
-        return player.hasPermission(Config.get().getString("recipe-permission-node".replace("%recipe%", recipeKeyFinal)) ?: "breweryrecipes.recipes.$recipeKeyFinal")
+        return player.hasPermission(Config.get().getString("recipe-permission-node")?.replace("%recipe%", recipeKey) ?: "breweryrecipes.recipes.$recipeKey")
     }
 }
