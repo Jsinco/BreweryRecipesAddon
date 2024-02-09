@@ -81,6 +81,6 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
         event.item!!.amount--
 
-        Recipes.getPermissionManager().setPermission(recipeKey, player, true)
+        Recipes.getPermissionManager().setPermission(Config.get().getString("recipe-permission-node")?.replace("%replace%", recipeKey), player, true)
     }
 }

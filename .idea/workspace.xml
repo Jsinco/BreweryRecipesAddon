@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e5966df-d3e7-4628-9d31-684abd4a96e4" name="Changes" comment="i forgot boolean persistence was added in api version 1.20">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/jsinco/recipes/guis/RecipeGui.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/jsinco/recipes/guis/RecipeGui.kt" afterDir="false" />
-    </list>
+    <list default="true" id="6e5966df-d3e7-4628-9d31-684abd4a96e4" name="Changes" comment="remove debug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,20 +60,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Gradle.Build Recipes.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Recipes [build].executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.Unnamed.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/jonah/server/paper-1.20.2-318.jar&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Gradle.Build Recipes.executor": "Run",
+    "Gradle.Recipes [build].executor": "Run",
+    "JAR Application.Unnamed.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Bukkit-Plugins/Recipes",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="JAR Application.Unnamed">
+}]]></component>
+  <component name="RunManager" selected="Gradle.Recipes [build]">
     <configuration name="Recipes [build]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -120,6 +123,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1706540544191</updated>
+      <workItem from="1707436804234" duration="917000" />
     </task>
     <task id="LOCAL-00001" summary="coded most of this in one commit">
       <option name="closed" value="true" />
@@ -161,14 +165,26 @@
       <option name="project" value="LOCAL" />
       <updated>1707040085349</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="remove debug">
+      <option name="closed" value="true" />
+      <created>1707438674400</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1707438674400</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="coded most of this in one commit" />
     <MESSAGE value="just gonna release it like this" />
     <MESSAGE value="i forgot boolean persistence was added in api version 1.20" />
-    <option name="LAST_COMMIT_MESSAGE" value="i forgot boolean persistence was added in api version 1.20" />
+    <MESSAGE value="remove debug" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove debug" />
   </component>
 </project>
