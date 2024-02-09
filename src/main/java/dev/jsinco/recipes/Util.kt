@@ -99,7 +99,6 @@ object Util {
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
         meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-book"), PersistentDataType.INTEGER, 0)
         item.itemMeta = meta
-        Bukkit.broadcastMessage(Bukkit.getVersion() + " " + Bukkit.getBukkitVersion())
         return item
     }
 
