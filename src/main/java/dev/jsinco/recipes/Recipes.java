@@ -65,7 +65,7 @@ public class Recipes extends BreweryAddon {
         Bukkit.getPluginManager().registerEvents(new Events(plugin), plugin);
         registerCommand(true);
 
-        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &frecipes from Brewery!");
+        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         Util.reloadPrefix();
         registerCommand(false);
-        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &frecipes from Brewery!");
+        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
     }
 
     public static BreweryPlugin getPlugin() {
