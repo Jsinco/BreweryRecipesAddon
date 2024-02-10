@@ -45,7 +45,7 @@ public class Recipes extends BreweryAddon {
 
         commandManager = new CommandManager(plugin);
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        BreweryPlugin.getScheduler().runTaskLater(() -> {
             switch (PermissionSetter.valueOf(Config.get().getString("recipe-saving-method").toUpperCase())) {
                 case PERMISSION_API -> {
                     switch (PermissionAPI.valueOf(Config.get().getString("permissions-api-plugin").toUpperCase())) {
