@@ -101,4 +101,4 @@ gui:
       display_name: '&0'
 
 # Version for if/when I update the config to have more options
-version: '1.4-BETA'
+version: '1.5-BETA'
