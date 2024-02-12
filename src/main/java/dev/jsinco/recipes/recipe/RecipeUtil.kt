@@ -25,7 +25,21 @@ object RecipeUtil {
 
     @JvmStatic
     fun getRecipeFromKey(recipe: String): Recipe {
-        val configurationSection: ConfigurationSection = plugin.config.getConfigurationSection("recipes.$recipe")!!
+        val configurationSection: ConfigurationSection = plugin.config.getConfigurationSection("recipes.$recipe") ?: return Recipe(
+            recipe,
+            "Unknown Recipe",
+            0,
+            0,
+            0,
+            0,
+            0,
+            Recipe.BarrelWoodTypes.ANY,
+            mutableMapOf(),
+            null,
+            0,
+            0
+        )
+
         val ingredientsRaw = configurationSection.getStringList("ingredients")
         val ingredientsMap: MutableMap<String, Int> = mutableMapOf()
         for (ingredientRaw in ingredientsRaw) {

@@ -31,7 +31,6 @@ class RecipeGui(player: Player) : InventoryHolder {
             recipeGuiItems.add(GuiItem.createRecipeGuiItem(recipe))
             totalRecipes++
         }
-        Bukkit.broadcastMessage("test")
 
         val totalRecipesItem = GuiItem.getTotalRecipesItem(totalRecipes, recipes.size)
         for (slot in totalRecipesItem.first) {

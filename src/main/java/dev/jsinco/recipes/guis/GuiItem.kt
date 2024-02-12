@@ -11,6 +11,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.persistence.PersistentDataType
 
 data class GuiItem(
@@ -49,12 +50,26 @@ data class GuiItem(
 
         fun createRecipeGuiItem(recipe: Recipe): ItemStack {
             val configSec = Config.get().getConfigurationSection("gui.items.recipe-gui-item")
-            val item = ItemStack(Material.PAPER)
+            val item = ItemStack(Material.valueOf(configSec?.getString("material") ?: "PAPER"))
             val meta = item.itemMeta!!
-            meta.setDisplayName(Util.colorcode(
-                configSec?.getString("display_name")?.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name)) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")
-            )
 
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS)
+            if (item.type == Material.POTION) { // if it's a potion, set the color
+                meta as PotionMeta
+                meta.color = recipe.potionColor?.color
+            }
+            meta.setDisplayName(Util.colorcode( // display name
+                recipeItemStringHelper(configSec?.getString("display_name"), recipe) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")
+            )
+            if (configSec?.getBoolean("glint") == true) { // glint
+                meta.addEnchant(Enchantment.LUCK, 1, true)
+            }
+            if (recipe.customModelData != 0) { // custom model data
+                meta.setCustomModelData(recipe.customModelData)
+            }
+
+
+            // lore/ingredients
             val ingredients: MutableList<String> = mutableListOf()
             for (ingredient in recipe.ingredients) {
                 ingredients.add(Util.colorcode(
@@ -63,33 +78,31 @@ data class GuiItem(
                         ?: " &#F7FFC9${ingredient.value}x &f${Util.itemNameFromMaterial(RecipeUtil.parseIngredientsName(ingredient.key))}"))
             }
             val lore: MutableList<String> = configSec?.getStringList("lore")
-                ?.map { Util.colorcode(
-                    it.replace("%difficulty%", recipe.difficulty.toString())
-                        .replace("%cooking_time%", recipe.cookingTime.toString())
-                        .replace("%distill_runs%", recipe.distillRuns.toString())
-                        .replace("%age%", recipe.age.toString())
-                        .replace("%barrel_type%", Util.itemNameFromMaterial(recipe.woodType.name))
-                )}?.toMutableList()
+                ?.map { Util.colorcode(recipeItemStringHelper(it, recipe) ?: "")}?.toMutableList()
                 ?: mutableListOf()
-
-
             val ingredientsPlaceHolderIndexes: List<Int> = lore.mapIndexedNotNull { index, line -> if (line.contains("%ingredients%")) index else null }
-
             for (index in ingredientsPlaceHolderIndexes) {
                 lore.removeAt(index)
                 lore.addAll(index, ingredients)
             }
 
-            if (configSec?.getBoolean("glint") == true) {
-                meta.addEnchant(Enchantment.LUCK, 1, true)
-            }
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
             meta.lore = lore
             item.itemMeta = meta
             return item
         }
+        
+        private fun recipeItemStringHelper(string: String?, recipe: Recipe): String? {
+            if (string == null) return null
+            return string
+                .replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name))
+                .replace("%difficulty%", recipe.difficulty.toString())
+                .replace("%cooking_time%", recipe.cookingTime.toString())
+                .replace("%distill_runs%", recipe.distillRuns.toString())
+                .replace("%age%", recipe.age.toString())
+                .replace("%barrel_type%", Util.itemNameFromMaterial(recipe.woodType.name))
+        }
 
-        fun createGUIItem(guiItem: GuiItem, guiItemType: GuiItemType): Pair<List<Int>, ItemStack> {
+        private fun createGUIItem(guiItem: GuiItem, guiItemType: GuiItemType): Pair<List<Int>, ItemStack> {
             val item = ItemStack(guiItem.material)
             val meta = item.itemMeta!!
             meta.setDisplayName(Util.colorcode(guiItem.name))
@@ -107,7 +120,7 @@ data class GuiItem(
             return Pair(guiItem.slots, item)
         }
 
-        fun getGUIItem(string: String): GuiItem {
+        private fun getGUIItem(string: String): GuiItem {
             return GuiItem(Material.valueOf(Config.get().getString("gui.$string.material") ?: "DIRT"),
                 Config.get().getIntegerList("gui.$string.slots"),
                 Config.get().getString("gui.$string.display_name") ?: " ",

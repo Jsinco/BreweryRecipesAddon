@@ -7,6 +7,7 @@ import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.guis.GuiItemType
 import dev.jsinco.recipes.guis.PaginatedGui
 import dev.jsinco.recipes.guis.RecipeGui
+import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeItem
 import dev.jsinco.recipes.recipe.RecipeUtil
 import org.bukkit.NamespacedKey
@@ -55,7 +56,12 @@ class Events(private val plugin: BreweryPlugin) : Listener {
     @EventHandler
     fun onLootGenerate(event: LootGenerateEvent) {
         if (Random.nextInt(Config.get().getInt("recipe-spawning.bound")) > Config.get().getInt("recipe-spawning.chance")) return
-        event.loot.add(RecipeItem(RecipeUtil.getRandomRecipe()).item)
+
+        var recipe: Recipe = RecipeUtil.getRandomRecipe()
+        while (Config.get().getStringList("recipe-spawning.blacklisted-recipes").contains(recipe.recipeKey)) {
+            recipe = RecipeUtil.getRandomRecipe()
+        }
+        event.loot.add(RecipeItem(recipe).item)
     }
 
     @EventHandler

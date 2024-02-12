@@ -91,7 +91,7 @@ object Util {
     fun getRecipeBookItem(): ItemStack {
         val item = ItemStack(Material.valueOf(Config.get().getString("recipe-book-item.material") ?: "BOOK"))
         val meta = item.itemMeta!!
-        meta.setDisplayName(colorcode(Config.get().getString("recipe-book-item.name") ?: "&6&lRecipe Book"))
+        meta.setDisplayName(colorcode(Config.get().getString("recipe-book-item.display_name") ?: "&6&lRecipe Book"))
         meta.lore = colorArrayList(Config.get().getStringList("recipe-book-item.lore"))
         if (Config.get().getBoolean("recipe-book-item.glint")) {
             meta.addEnchant(Enchantment.LUCK, 1, true)

@@ -10,7 +10,6 @@ import dev.jsinco.recipes.listeners.Events;
 import dev.jsinco.recipes.permissions.*;
 import dev.jsinco.recipes.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 
 // Idea:
 // Allow recipes for brews to be collected from randomly generated chests and make some recipes rarer than others
@@ -18,15 +17,18 @@ import org.bukkit.event.HandlerList;
 // Pulls directly from the Brewery plugin's config.yml file
 
 public class Recipes extends BreweryAddon {
+
     private static AddonFileManager addonFileManager;
     private static BreweryPlugin plugin;
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
+    private static AddonLogger logger;
     private static boolean bukkitPersistence;
 
-    public Recipes(BreweryPlugin superPlugin, AddonLogger logger) {
+    public Recipes(BreweryPlugin superPlugin, AddonLogger superLogger) {
         super(superPlugin, logger);
         plugin = superPlugin;
+        logger = superLogger;
     }
 
     @Override
@@ -65,7 +67,12 @@ public class Recipes extends BreweryAddon {
         Bukkit.getPluginManager().registerEvents(new Events(plugin), plugin);
         registerCommand(true);
 
-        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
+
+        LazyConfigUpdater configUpdater = new LazyConfigUpdater();
+        if (configUpdater.isConfigOutdated()) {
+            configUpdater.createNewConfigFile();
+        }
     }
 
     @Override
@@ -73,7 +80,7 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         Util.reloadPrefix();
         registerCommand(false);
-        getLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
     }
 
     public static BreweryPlugin getPlugin() {
@@ -88,9 +95,8 @@ public class Recipes extends BreweryAddon {
         return permissionManager;
     }
 
-    @Override
-    public AddonLogger getLogger() {
-        return super.getLogger();
+    public static AddonLogger getAddonLogger() {
+        return logger;
     }
 
 
