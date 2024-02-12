@@ -1,6 +1,7 @@
 package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.recipe.PotionColor
 import dev.jsinco.recipes.Recipes
 import org.bukkit.configuration.ConfigurationSection
 
@@ -24,24 +25,40 @@ object RecipeUtil {
 
     @JvmStatic
     fun getRecipeFromKey(recipe: String): Recipe {
-        val configurationSection: ConfigurationSection = plugin.config.getConfigurationSection("recipes")!!
-        val ingredientsRaw = configurationSection.getStringList("$recipe.ingredients")
+        val configurationSection: ConfigurationSection = plugin.config.getConfigurationSection("recipes.$recipe")!!
+        val ingredientsRaw = configurationSection.getStringList("ingredients")
         val ingredientsMap: MutableMap<String, Int> = mutableMapOf()
         for (ingredientRaw in ingredientsRaw) {
             ingredientsMap[ingredientRaw.substringBefore("/")] = ingredientRaw.substringAfter("/").toInt()
         }
 
+        var woodType: Recipe.BarrelWoodTypes = Recipe.BarrelWoodTypes.ANY
+        if (configurationSection.contains("wood")) {
+            for (woodNum in Recipe.BarrelWoodTypes.entries.map { it.woodNumber }) {
+                if (configurationSection.getInt("wood") == woodNum) {
+                    woodType = Recipe.BarrelWoodTypes.entries.first { it.woodNumber == woodNum }
+                    break
+                }
+            }
+        }
+
+
         return Recipe(
             recipe,
-            configurationSection.getString("$recipe.name") ?: "Unnamed Recipe",
-            configurationSection.getInt("$recipe.difficulty"),
-            configurationSection.getInt("$recipe.cookingtime"),
-            configurationSection.getInt("$recipe.distillruns"),
-            if (configurationSection.contains("$recipe.distilltime")) configurationSection.getInt("$recipe.distilltime") else 40,
-            configurationSection.getInt("$recipe.age"),
+
+            configurationSection.getString("name") ?: "Unnamed Recipe",
+            configurationSection.getInt("difficulty"),
+            configurationSection.getInt("cookingtime"),
+            configurationSection.getInt("distillruns"),
+            if (configurationSection.contains("distilltime")) configurationSection.getInt("distilltime") else 40,
+            configurationSection.getInt("age"),
+            woodType,
+
             ingredientsMap,
-            if (configurationSection.contains("$recipe.rarity_weight")) configurationSection.getInt("$recipe.rarity_weight")
-            else configurationSection.getInt("$recipe.difficulty")
+
+            if (configurationSection.contains("color")) PotionColor.fromString(configurationSection.getString("color") ?: "PINK") else null,
+            parseRecipeName(configurationSection.getString("customModelData") ?: "0").toIntOrNull() ?: 0,
+            if (configurationSection.contains("rarity_weight")) configurationSection.getInt("rarity_weight") else configurationSection.getInt("difficulty")
         )
     }
 

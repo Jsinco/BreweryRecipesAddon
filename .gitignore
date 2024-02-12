@@ -5,6 +5,10 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
+.idea/discord.xml
+.idea/workspace.xml
+.idea/kotlinc.xml
+.idea/uiDesigner.xml
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml

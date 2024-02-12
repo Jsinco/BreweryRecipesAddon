@@ -31,14 +31,15 @@ class RecipeGui(player: Player) : InventoryHolder {
             recipeGuiItems.add(GuiItem.createRecipeGuiItem(recipe))
             totalRecipes++
         }
+        Bukkit.broadcastMessage("test")
 
         val totalRecipesItem = GuiItem.getTotalRecipesItem(totalRecipes, recipes.size)
         for (slot in totalRecipesItem.first) {
             inv.setItem(slot, totalRecipesItem.second)
         }
     }
-
-    val paginatedGui: PaginatedGui = PaginatedGui(Config.get().getString("gui.title") ?: "Recipes", inv, recipeGuiItems, Config.get().getIntegerList("gui.items.recipe-item-slots"))
+    //
+    val paginatedGui: PaginatedGui = PaginatedGui(Config.get().getString("gui.title") ?: "Recipes", inv, recipeGuiItems, Config.get().getIntegerList("gui.items.recipe-gui-item.slots"))
 
     init {
         val arrowItems = GuiItem.getPageArrowItems()

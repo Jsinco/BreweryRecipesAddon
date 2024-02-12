@@ -48,24 +48,42 @@ data class GuiItem(
         }
 
         fun createRecipeGuiItem(recipe: Recipe): ItemStack {
+            val configSec = Config.get().getConfigurationSection("gui.items.recipe-gui-item")
             val item = ItemStack(Material.PAPER)
             val meta = item.itemMeta!!
-            meta.setDisplayName(Util.colorcode("&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe"))
+            meta.setDisplayName(Util.colorcode(
+                configSec?.getString("display_name")?.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name)) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")
+            )
 
-            val lore: MutableList<String> = mutableListOf()
-            lore.addAll(
-                Util.colorArrayList(listOf(
-                "&fDifficulty&7: &#F7FFC9${recipe.difficulty}",
-                "&fCooking time&7: &#F7FFC9${recipe.cookingTime}m",
-                "&fDistill Runs&7: &#F7FFC9${recipe.distillRuns}",
-                "&fAge&7: &#F7FFC9${recipe.age}yrs &f(Minecraft days)",
-                "", "&fIngredients&7:")
-            ))
+            val ingredients: MutableList<String> = mutableListOf()
             for (ingredient in recipe.ingredients) {
-                lore.add(Util.colorcode(" &#F7FFC9${ingredient.value}x &f${Util.itemNameFromMaterial(RecipeUtil.parseIngredientsName(ingredient.key))}"))
+                ingredients.add(Util.colorcode(
+                    configSec?.getString("ingredient-format")?.replace("%amount%", ingredient.value.toString())
+                        ?.replace("%ingredient%", Util.itemNameFromMaterial(RecipeUtil.parseIngredientsName(ingredient.key)))
+                        ?: " &#F7FFC9${ingredient.value}x &f${Util.itemNameFromMaterial(RecipeUtil.parseIngredientsName(ingredient.key))}"))
             }
-            meta.addEnchant(Enchantment.LUCK, 1, true)
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+            val lore: MutableList<String> = configSec?.getStringList("lore")
+                ?.map { Util.colorcode(
+                    it.replace("%difficulty%", recipe.difficulty.toString())
+                        .replace("%cooking_time%", recipe.cookingTime.toString())
+                        .replace("%distill_runs%", recipe.distillRuns.toString())
+                        .replace("%age%", recipe.age.toString())
+                        .replace("%barrel_type%", Util.itemNameFromMaterial(recipe.woodType.name))
+                )}?.toMutableList()
+                ?: mutableListOf()
+
+
+            val ingredientsPlaceHolderIndexes: List<Int> = lore.mapIndexedNotNull { index, line -> if (line.contains("%ingredients%")) index else null }
+
+            for (index in ingredientsPlaceHolderIndexes) {
+                lore.removeAt(index)
+                lore.addAll(index, ingredients)
+            }
+
+            if (configSec?.getBoolean("glint") == true) {
+                meta.addEnchant(Enchantment.LUCK, 1, true)
+            }
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
             meta.lore = lore
             item.itemMeta = meta
             return item
