@@ -1,6 +1,7 @@
 package dev.jsinco.recipes
 
 import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.utility.BUtil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -89,8 +90,8 @@ object Util {
 
     @JvmStatic
     fun getRecipeBookItem(): ItemStack {
-        val item = ItemStack(Material.valueOf(Config.get().getString("recipe-book-item.material") ?: "BOOK"))
-        val meta = item.itemMeta!!
+        val item = ItemStack(BUtil.getMaterialSafely(Config.get().getString("recipe-book-item.material") ?: "BOOK"))
+        val meta = item.itemMeta ?: return item
         meta.setDisplayName(colorcode(Config.get().getString("recipe-book-item.display_name") ?: "&6&lRecipe Book"))
         meta.lore = colorArrayList(Config.get().getStringList("recipe-book-item.lore"))
         if (Config.get().getBoolean("recipe-book-item.glint")) {

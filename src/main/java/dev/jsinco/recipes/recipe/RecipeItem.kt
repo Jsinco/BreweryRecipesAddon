@@ -1,6 +1,7 @@
 package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.utility.BUtil
 import dev.jsinco.recipes.Config
 import dev.jsinco.recipes.Recipes
 import dev.jsinco.recipes.Util
@@ -17,7 +18,7 @@ class RecipeItem (recipe: Recipe) {
         private val plugin: BreweryPlugin = Recipes.getPlugin()
     }
 
-    val item = ItemStack(Material.valueOf(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))
+    val item = ItemStack(BUtil.getMaterialSafely(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))
 
     init {
         val meta = item.itemMeta!!

@@ -57,7 +57,7 @@ recipe-item:
 
 # Full example Gui Border Item
 # item:
-#   material: GRASS
+#   material: SHORT_GRASS
 #   slots: [ 0 ]
 #   display_name: 'example item'
 #   lore: [ 'example lore', 'another line' ]
@@ -119,7 +119,7 @@ gui:
       slots: [0, 8, 45, 53]
       display_name: '&0'
     border2:
-      material: GRASS
+      material: SHORT_GRASS
       slots: [1, 7, 46, 52 ]
       display_name: '&0'
     border3:
