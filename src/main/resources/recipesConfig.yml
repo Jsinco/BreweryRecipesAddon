@@ -12,6 +12,7 @@ command-permissions:
   givebook: "breweryrecipes.givebook"
   give: "breweryrecipes.give"
   gui: "breweryrecipes.gui"
+  openrecipebook: "breweryrecipes.openrecipebook"
 
 # Recipes can be stored to a player via 2 methods:
 # Permission_API, Command
@@ -135,5 +136,11 @@ gui:
       slots: [4, 49]
       display_name: '&0'
 
+
+messages:
+  already-learned: 'You already know this recipe!'
+  learned: 'You have learned the ''%s'' recipe&r!'
+
+
 # Config version, do not change!
-version: '1.6-BETA'
+version: '1.7-BETA'

@@ -6,6 +6,7 @@ import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.commands.subcommands.GiveBook
 import dev.jsinco.recipes.commands.subcommands.GiveRecipeItem
 import dev.jsinco.recipes.commands.subcommands.GuiCommand
+import dev.jsinco.recipes.commands.subcommands.OpenRecipeBookCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
@@ -19,7 +20,8 @@ class CommandManager(val plugin: BreweryPlugin) : com.dre.brewery.commands.SubCo
     private val commands: Map<String, SubCommand> = mapOf(
         "give" to GiveRecipeItem(),
         "givebook" to GiveBook(),
-        "gui" to GuiCommand()
+        "gui" to GuiCommand(),
+        "openrecipebook" to OpenRecipeBookCommand(),
     )
 
 

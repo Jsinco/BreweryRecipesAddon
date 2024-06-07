@@ -3,9 +3,7 @@ package dev.jsinco.recipes.recipe
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
 import dev.jsinco.recipes.Config
-import dev.jsinco.recipes.Recipes
 import dev.jsinco.recipes.Util
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
@@ -15,7 +13,7 @@ import org.bukkit.persistence.PersistentDataType
 class RecipeItem (recipe: Recipe) {
 
     companion object {
-        private val plugin: BreweryPlugin = Recipes.getPlugin()
+        private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
     }
 
     val item = ItemStack(BUtil.getMaterialSafely(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))

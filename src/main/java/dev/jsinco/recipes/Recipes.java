@@ -7,7 +7,11 @@ import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.api.addons.BreweryAddon;
 import dev.jsinco.recipes.commands.CommandManager;
 import dev.jsinco.recipes.listeners.Events;
-import dev.jsinco.recipes.permissions.*;
+import dev.jsinco.recipes.permissions.CommandPermission;
+import dev.jsinco.recipes.permissions.LuckPermsPermission;
+import dev.jsinco.recipes.permissions.PermissionAPI;
+import dev.jsinco.recipes.permissions.PermissionManager;
+import dev.jsinco.recipes.permissions.PermissionSetter;
 import dev.jsinco.recipes.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
 
@@ -19,7 +23,6 @@ import org.bukkit.Bukkit;
 public class Recipes extends BreweryAddon {
 
     private static AddonFileManager addonFileManager;
-    private static BreweryPlugin plugin;
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
     private static AddonLogger logger;
@@ -27,7 +30,6 @@ public class Recipes extends BreweryAddon {
 
     public Recipes(BreweryPlugin superPlugin, AddonLogger superLogger) {
         super(superPlugin, logger);
-        plugin = superPlugin;
         logger = superLogger;
     }
 
@@ -50,13 +52,11 @@ public class Recipes extends BreweryAddon {
         BreweryPlugin.getScheduler().runTaskLater(() -> {
             switch (PermissionSetter.valueOf(Config.get().getString("recipe-saving-method").toUpperCase())) {
                 case PERMISSION_API -> {
-                    switch (PermissionAPI.valueOf(Config.get().getString("permissions-api-plugin").toUpperCase())) {
-                        case LUCKPERMS -> {
-                            if (PermissionAPI.LUCKPERMS.checkIfPermissionPluginExists()) {
-                                permissionManager = new LuckPermsPermission();
-                            } else {
-                                goToDefaultPermissionMethod();
-                            }
+                    if (PermissionAPI.valueOf(Config.get().getString("permissions-api-plugin").toUpperCase()) == PermissionAPI.LUCKPERMS) {
+                        if (PermissionAPI.LUCKPERMS.checkIfPermissionPluginExists()) {
+                            permissionManager = new LuckPermsPermission();
+                        } else {
+                            goToDefaultPermissionMethod();
                         }
                     }
 
@@ -81,10 +81,6 @@ public class Recipes extends BreweryAddon {
         Util.reloadPrefix();
         registerCommand(false);
         getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
-    }
-
-    public static BreweryPlugin getPlugin() {
-        return plugin;
     }
 
     public static AddonFileManager getAddonFileManager() {

@@ -2,9 +2,8 @@ package dev.jsinco.recipes.guis
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
-import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.Config
-import dev.jsinco.recipes.Recipes
+import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeUtil
 import org.bukkit.Material
@@ -24,7 +23,7 @@ data class GuiItem(
     val customModelData: Int
 ) {
     companion object {
-        private val plugin: BreweryPlugin = Recipes.getPlugin()
+        private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
 
         fun getAllGuiBorderItems(): List<Pair<List<Int>, ItemStack>> {
             val items = mutableListOf<Pair<List<Int>, ItemStack>>()
@@ -52,7 +51,7 @@ data class GuiItem(
         fun createRecipeGuiItem(recipe: Recipe): ItemStack {
             val configSec = Config.get().getConfigurationSection("gui.items.recipe-gui-item")
             val item = ItemStack(BUtil.getMaterialSafely(configSec?.getString("material") ?: "PAPER"))
-            val meta = item.itemMeta!!
+            val meta = item.itemMeta ?: return item
 
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS)
             if (item.type == Material.POTION) { // if it's a potion, set the color
@@ -122,7 +121,7 @@ data class GuiItem(
         }
 
         private fun getGUIItem(string: String): GuiItem {
-            return GuiItem(BUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "DIRT"),
+            return GuiItem(BUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "MAP"),
                 Config.get().getIntegerList("gui.$string.slots"),
                 Config.get().getString("gui.$string.display_name") ?: " ",
                 Config.get().getStringList("gui.$string.lore"),

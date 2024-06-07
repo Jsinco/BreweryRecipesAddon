@@ -2,9 +2,7 @@ package dev.jsinco.recipes
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -13,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 object Util {
-    val plugin: BreweryPlugin = Recipes.getPlugin()
+    val plugin: BreweryPlugin = BreweryPlugin.getInstance()
     var prefix: String = colorcode(plugin.config.getString("pluginPrefix") ?: "&2[Brewery] &f")
 
     @JvmStatic

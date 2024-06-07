@@ -7,7 +7,7 @@ import java.io.File;
  */
 public class LazyConfigUpdater {
 
-    private final static String latestVersion = "1.6-BETA";
+    private final static String latestVersion = "1.7-BETA";
 
     private final String configVersion = Config.get().getString("version");
 
