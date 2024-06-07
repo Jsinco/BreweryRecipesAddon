@@ -2,11 +2,10 @@ package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.recipe.PotionColor
-import dev.jsinco.recipes.Recipes
 import org.bukkit.configuration.ConfigurationSection
 
 object RecipeUtil {
-    private val plugin: BreweryPlugin = Recipes.getPlugin()
+    private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
 
     fun getAllRecipes(): List<Recipe> {
         val recipes: MutableList<Recipe> = mutableListOf()
