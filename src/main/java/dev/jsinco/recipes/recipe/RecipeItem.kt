@@ -26,7 +26,7 @@ class RecipeItem (recipe: Recipe) {
         meta.lore = Util.colorArrayList(Config.get().getStringList("recipe-item.lore").map { it.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name)) })
         meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-key"), PersistentDataType.STRING, recipe.recipeKey)
         if (Config.get().getBoolean("recipe-item.glint")) {
-            meta.addEnchant(Enchantment.LUCK, 1, true)
+            meta.addEnchant(Enchantment.DURABILITY, 1, true)
         }
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
         item.itemMeta = meta

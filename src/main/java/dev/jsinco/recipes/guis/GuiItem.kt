@@ -62,7 +62,7 @@ data class GuiItem(
                 recipeItemStringHelper(configSec?.getString("display_name"), recipe) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")
             )
             if (configSec?.getBoolean("glint") == true) { // glint
-                meta.addEnchant(Enchantment.LUCK, 1, true)
+                meta.addEnchant(Enchantment.DURABILITY, 1, true)
             }
             if (recipe.customModelData != 0) { // custom model data
                 meta.setCustomModelData(recipe.customModelData)
@@ -108,7 +108,7 @@ data class GuiItem(
             meta.setDisplayName(Util.colorcode(guiItem.name))
             meta.lore = Util.colorArrayList(guiItem.lore)
             if (guiItem.glint) {
-                meta.addEnchant(Enchantment.LUCK, 1, true)
+                meta.addEnchant(Enchantment.DURABILITY, 1, true)
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
             }
             if (guiItem.customModelData != 0) {
