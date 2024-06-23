@@ -93,7 +93,7 @@ object Util {
         meta.setDisplayName(colorcode(Config.get().getString("recipe-book-item.display_name") ?: "&6&lRecipe Book"))
         meta.lore = colorArrayList(Config.get().getStringList("recipe-book-item.lore"))
         if (Config.get().getBoolean("recipe-book-item.glint")) {
-            meta.addEnchant(Enchantment.DURABILITY, 1, true)
+            meta.addEnchant(Enchantment.MENDING, 1, true)
         }
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
         meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-book"), PersistentDataType.INTEGER, 0)
