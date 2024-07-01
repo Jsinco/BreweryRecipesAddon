@@ -10,6 +10,11 @@ import org.bukkit.command.CommandSender
 
 class OpenRecipeBookCommand : SubCommand {
     override fun execute(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>) {
+        if (args.size < 2) {
+            sender.sendMessage(colorcode("&cUsage: /breweryrecipes openrecipebook <player>"))
+            return
+        }
+
         val player = Bukkit.getPlayerExact(args[1])
         if (player == null) {
             sender.sendMessage(colorcode("&cPlayer not found"))

@@ -1,7 +1,6 @@
 package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.recipe.PotionColor
-import org.bukkit.Color
 
 data class Recipe (
     val recipeKey: String,

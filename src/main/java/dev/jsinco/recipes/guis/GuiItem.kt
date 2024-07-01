@@ -53,10 +53,11 @@ data class GuiItem(
             val item = ItemStack(BUtil.getMaterialSafely(configSec?.getString("material") ?: "PAPER"))
             val meta = item.itemMeta ?: return item
 
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS)
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
             if (item.type == Material.POTION) { // if it's a potion, set the color
                 meta as PotionMeta
                 meta.color = recipe.potionColor?.color
+                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
             }
             meta.setDisplayName(Util.colorcode( // display name
                 recipeItemStringHelper(configSec?.getString("display_name"), recipe) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")
