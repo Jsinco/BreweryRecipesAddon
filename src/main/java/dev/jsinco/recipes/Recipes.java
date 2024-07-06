@@ -5,6 +5,7 @@ import com.dre.brewery.api.addons.AddonFileManager;
 import com.dre.brewery.api.addons.AddonLogger;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.api.addons.BreweryAddon;
+import com.dre.brewery.utility.MinecraftVersion;
 import dev.jsinco.recipes.commands.CommandManager;
 import dev.jsinco.recipes.listeners.Events;
 import dev.jsinco.recipes.permissions.CommandPermission;
@@ -26,7 +27,7 @@ public class Recipes extends BreweryAddon {
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
     private static AddonLogger logger;
-    private static boolean bukkitPersistence;
+    //private static boolean bukkitPersistence;
 
     public Recipes(BreweryPlugin superPlugin, AddonLogger superLogger) {
         super(superPlugin, logger);
@@ -34,17 +35,14 @@ public class Recipes extends BreweryAddon {
     }
 
     @Override
-    public void onAddonEnable(AddonFileManager addonFileManager) {
-        Recipes.addonFileManager = addonFileManager;
+    public void onAddonEnable(AddonFileManager superAddonFileManager) {
+        addonFileManager = superAddonFileManager;
 
 
-        // Version check for when I add in support for versions lower than 1.17
-        // returns something like: 1.18.2-R0.1-SNAPSHOT so we strip it to 1.18.2 then to 18 and check that major version is 17 or higher
-        String versionStripped = Bukkit.getBukkitVersion().substring(0, Bukkit.getBukkitVersion().indexOf("-"));
-        String[] versionSplit = versionStripped.split("\\.");
-        versionStripped = versionSplit[1];
-        bukkitPersistence = Integer.parseInt(versionStripped) >= 17;
-
+        MinecraftVersion mcV = BreweryPlugin.getMCVersion();
+        if (mcV.isOrEarlier(MinecraftVersion.V1_13)) {
+            logger.info("This addon uses PersistentDataContainers (PDC) which were added in API version 1.14.1. This addon is not compatible with your server version: &7(" + mcV.getVersion() + ")");
+        }
 
 
         commandManager = new CommandManager(plugin);
@@ -115,7 +113,7 @@ public class Recipes extends BreweryAddon {
         permissionManager = new CommandPermission();
     }
 
-    public static boolean isBukkitPersistence() {
-        return bukkitPersistence;
-    }
+    //public static boolean isBukkitPersistence() {
+    //    return bukkitPersistence;
+    //}
 }
