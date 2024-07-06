@@ -85,7 +85,7 @@ class Events(private val plugin: BreweryPlugin) : Listener {
             return
         }
         event.item!!.amount--
-        player.sendMessage(Util.colorcode(Util.prefix + msgs?.getString("learned")?.let { String.format(it, event.item?.itemMeta!!.displayName) }))
+        player.sendMessage(Util.colorcode(Util.prefix + msgs?.getString("learned")?.let { String.format(it, event.item?.itemMeta?.displayName) }))
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
 
 
