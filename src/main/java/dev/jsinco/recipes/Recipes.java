@@ -27,7 +27,6 @@ public class Recipes extends BreweryAddon {
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
     private static AddonLogger logger;
-    //private static boolean bukkitPersistence;
 
     public Recipes(BreweryPlugin superPlugin, AddonLogger superLogger) {
         super(superPlugin, logger);
@@ -112,8 +111,4 @@ public class Recipes extends BreweryAddon {
         Config.save();
         permissionManager = new CommandPermission();
     }
-
-    //public static boolean isBukkitPersistence() {
-    //    return bukkitPersistence;
-    //}
 }
