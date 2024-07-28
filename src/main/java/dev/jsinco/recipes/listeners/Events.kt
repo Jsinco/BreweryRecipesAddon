@@ -26,6 +26,12 @@ import kotlin.random.Random
 
 class Events(private val plugin: BreweryPlugin) : Listener {
 
+    private val BOOK_KEY = NamespacedKey(plugin, "recipe-book")
+    private val LEGACY_BOOK_KEY = NamespacedKey("brewery", "recipe-book")
+
+    private val RECIPE_KEY = NamespacedKey(plugin, "recipe-key")
+    private val LEGACY_RECIPE_KEY = NamespacedKey("brewery", "recipe-key")
+
     @EventHandler
     fun onGuiClick(event: InventoryClickEvent) {
         if (event.inventory.holder !is RecipeGui) return
@@ -69,13 +75,17 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         if (event.action != Action.RIGHT_CLICK_BLOCK  && event.action != Action.RIGHT_CLICK_AIR) return
         val meta = event.item?.itemMeta ?: return
         val player = event.player
-        if (meta.persistentDataContainer.has(NamespacedKey(plugin, "recipe-book"), PersistentDataType.INTEGER)) {
+        if (meta.persistentDataContainer.has(BOOK_KEY, PersistentDataType.INTEGER) || meta.persistentDataContainer.has(LEGACY_BOOK_KEY, PersistentDataType.INTEGER)) {
             RecipeGui(player).openRecipeGui(player)
             event.isCancelled = true
             return
         }
 
-        val recipeKey: String = meta.persistentDataContainer.get(NamespacedKey(plugin, "recipe-key"), PersistentDataType.STRING) ?: return
+        var recipeKey: String? = meta.persistentDataContainer.get(RECIPE_KEY, PersistentDataType.STRING)
+        if (recipeKey == null) {
+            recipeKey = meta.persistentDataContainer.get(LEGACY_RECIPE_KEY, PersistentDataType.STRING)
+        }
+        if (recipeKey == null) return
         event.isCancelled = true
 
         val msgs = Config.get().getConfigurationSection("messages")
