@@ -94,11 +94,12 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         val msgs = Config.get().getConfigurationSection("messages")
 
         if (Util.checkForRecipePermission(player, recipeKey)) {
-            player.sendMessage(Util.colorcode(Util.prefix + msgs?.getString("already-learned")))
+            player.sendMessage(Util.colorcode(Util.prefix + (msgs?.getString("already-learned") ?: "You already know this recipe!")))
             return
         }
+
         event.item!!.amount--
-        player.sendMessage(Util.colorcode(Util.prefix + msgs?.getString("learned")?.let { String.format(it, event.item?.itemMeta?.displayName) }))
+        player.sendMessage(Util.colorcode(Util.prefix + String.format((msgs?.getString("learned") ?: "You have learned the '%s'!"), meta.displayName)))
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
 
 

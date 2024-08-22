@@ -139,7 +139,7 @@ gui:
 
 messages:
   already-learned: 'You already know this recipe!'
-  learned: 'You have learned the ''%s'' recipe&r!'
+  learned: 'You have learned the ''%s''!'
 
 
 # Config version, do not change!
