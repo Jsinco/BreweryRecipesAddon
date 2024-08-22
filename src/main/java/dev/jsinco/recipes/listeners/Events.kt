@@ -61,7 +61,10 @@ class Events(private val plugin: BreweryPlugin) : Listener {
 
     @EventHandler
     fun onLootGenerate(event: LootGenerateEvent) {
-        if (Random.nextInt(Config.get().getInt("recipe-spawning.bound")) > Config.get().getInt("recipe-spawning.chance")) return
+        val bound = Config.get().getInt("recipe-spawning.bound")
+        val chance = Config.get().getInt("recipe-spawning.chance")
+        if (bound <= 0 || chance <= 0) return
+        else if (Random.nextInt(bound) > chance) return
 
         var recipe: Recipe = RecipeUtil.getRandomRecipe()
         while (Config.get().getStringList("recipe-spawning.blacklisted-recipes").contains(recipe.recipeKey)) {

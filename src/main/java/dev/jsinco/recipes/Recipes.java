@@ -15,6 +15,7 @@ import dev.jsinco.recipes.permissions.PermissionManager;
 import dev.jsinco.recipes.permissions.PermissionSetter;
 import dev.jsinco.recipes.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 
 // Idea:
 // Allow recipes for brews to be collected from randomly generated chests and make some recipes rarer than others
@@ -27,6 +28,7 @@ public class Recipes extends BreweryAddon {
     private static PermissionManager permissionManager;
     private static CommandManager commandManager;
     private static AddonLogger logger;
+    private static Events events;
 
     public Recipes(BreweryPlugin superPlugin, AddonLogger superLogger) {
         super(superPlugin, logger);
@@ -41,6 +43,7 @@ public class Recipes extends BreweryAddon {
         MinecraftVersion mcV = BreweryPlugin.getMCVersion();
         if (mcV.isOrEarlier(MinecraftVersion.V1_13)) {
             logger.info("This addon uses PersistentDataContainers (PDC) which were added in API version 1.14.1. This addon is not compatible with your server version: &7(" + mcV.getVersion() + ")");
+
         }
 
 
@@ -61,7 +64,9 @@ public class Recipes extends BreweryAddon {
                 case COMMAND -> permissionManager = new CommandPermission();
             }
         }, 1L);
-        Bukkit.getPluginManager().registerEvents(new Events(plugin), plugin);
+
+        events = new Events(plugin);
+        Bukkit.getPluginManager().registerEvents(events, plugin);
         registerCommand(true);
 
         getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
@@ -70,6 +75,15 @@ public class Recipes extends BreweryAddon {
         if (configUpdater.isConfigOutdated()) {
             configUpdater.createNewConfigFile();
         }
+    }
+
+    @Override
+    public void onAddonDisable() {
+        if (events != null) {
+            HandlerList.unregisterAll(events);
+        }
+        unregisterCommand();
+        getAddonLogger().info("Recipes addon disabled.");
     }
 
     @Override
@@ -104,6 +118,11 @@ public class Recipes extends BreweryAddon {
         } else {
             AddonManager.registerAddonCommand(commandManager);
         }
+    }
+
+    private void unregisterCommand() {
+        com.dre.brewery.commands.CommandManager.removeSubCommand("recipes");
+        AddonManager.unRegisterAddonCommand(commandManager);
     }
 
     private void goToDefaultPermissionMethod() {
