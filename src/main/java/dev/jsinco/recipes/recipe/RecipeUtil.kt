@@ -2,18 +2,28 @@ package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.recipe.PotionColor
+import dev.jsinco.recipes.Recipes
 import org.bukkit.configuration.ConfigurationSection
 
 object RecipeUtil {
     private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
+    val loadedRecipes: MutableList<Recipe> = mutableListOf()
 
-    fun getAllRecipes(): List<Recipe> {
-        val recipes: MutableList<Recipe> = mutableListOf()
-        val configurationSection = plugin.config.getConfigurationSection("recipes") ?: return emptyList()
-        for (recipe in configurationSection.getKeys(false)) {
-            recipes.add(getRecipeFromKey(recipe))
+    @JvmStatic
+    fun loadAllRecipes() {
+        if (loadedRecipes.isNotEmpty()) {
+            loadedRecipes.clear()
+            Recipes.getAddonInstance().addonLogger.info("Refreshing loaded recipes!")
         }
-        return recipes
+        val configurationSection = plugin.config.getConfigurationSection("recipes") ?: throw RuntimeException("Config section 'recipes' in null in BreweryX's config.yml!")
+        for (recipe in configurationSection.getKeys(false)) {
+            loadedRecipes.add(getRecipeFromKey(recipe))
+        }
+    }
+
+    @JvmStatic
+    fun getAllRecipes(): List<Recipe> {
+        return loadedRecipes
     }
 
     @JvmStatic

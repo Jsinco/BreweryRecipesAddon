@@ -13,7 +13,7 @@ object Config {
     @JvmStatic
     fun get(): YamlConfiguration {
         if (configFile == null || config == null) {
-            addonFileManager = Recipes.getAddonFileManager()
+            addonFileManager = Recipes.fileManager()
             addonFileManager.generateFile("recipesConfig.yml")
             configFile = addonFileManager.getFile("recipesConfig.yml")
             config = YamlConfiguration.loadConfiguration(configFile!!)
@@ -23,7 +23,7 @@ object Config {
 
     @JvmStatic
     fun reload() {
-        addonFileManager = Recipes.getAddonFileManager()
+        addonFileManager = Recipes.fileManager()
         addonFileManager.generateFile("recipesConfig.yml")
         configFile = addonFileManager.getFile("recipesConfig.yml")
         config = YamlConfiguration.loadConfiguration(configFile!!)

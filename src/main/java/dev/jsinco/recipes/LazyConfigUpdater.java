@@ -21,14 +21,14 @@ public class LazyConfigUpdater {
     }
 
     public void createNewConfigFile() {
-        File currentConfigFile = new File(Recipes.getAddonFileManager().getAddonFolder(), "recipesConfig.yml");
-        if (!currentConfigFile.renameTo(new File(Recipes.getAddonFileManager().getAddonFolder(), "recipesConfig-OLD.yml"))) {
-            Recipes.getAddonLogger().info("Failed to rename the old config file");
+        File currentConfigFile = new File(Recipes.fileManager().getAddonFolder(), "recipesConfig.yml");
+        if (!currentConfigFile.renameTo(new File(Recipes.fileManager().getAddonFolder(), "recipesConfig-OLD.yml"))) {
+            Recipes.getAddonInstance().getAddonLogger().info("Failed to rename the old config file");
             return;
         }
-        Recipes.getAddonFileManager().generateFile("recipesConfig.yml");
+        Recipes.fileManager().generateFile("recipesConfig.yml");
 
-        Recipes.getAddonLogger().info("Created a new config file, please transfer all your old settings to the newly created file." +
+        Recipes.getAddonInstance().getAddonLogger().info("Created a new config file, please transfer all your old settings to the newly created file." +
                 " Your old config file has been renamed to recipesConfig-OLD.yml");
     }
 }

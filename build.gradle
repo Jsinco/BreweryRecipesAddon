@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'dev.jsinco.recipes'
-version = '1.13'
+version = '1.14'
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Jsinco:BreweryX:3.2.3-SNAPSHOT")
+    compileOnly("com.github.Jsinco:BreweryX:f8dbbff7c4")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly "net.luckperms:api:5.4"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

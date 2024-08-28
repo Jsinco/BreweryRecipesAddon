@@ -2,6 +2,7 @@ package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.recipe.PotionColor
 
+// We're not using BreweryX's BRecipe class because it has a bunch of extra stuff that we don't need
 data class Recipe (
     val recipeKey: String,
 
