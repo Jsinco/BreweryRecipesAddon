@@ -5,8 +5,9 @@ import com.dre.brewery.api.addons.AddonFileManager;
 import com.dre.brewery.api.addons.AddonInfo;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.api.addons.BreweryAddon;
+import com.dre.brewery.commands.CommandManager;
 import com.dre.brewery.utility.MinecraftVersion;
-import dev.jsinco.recipes.commands.CommandManager;
+import dev.jsinco.recipes.commands.AddonCommandManager;
 import dev.jsinco.recipes.listeners.Events;
 import dev.jsinco.recipes.permissions.CommandPermission;
 import dev.jsinco.recipes.permissions.LuckPermsPermission;
@@ -31,7 +32,6 @@ import org.bukkit.event.HandlerList;
 public class Recipes extends BreweryAddon {
 
     private static PermissionManager permissionManager;
-    private static CommandManager commandManager;
     private static AddonFileManager fileManager;
     private static Events events;
     private static Recipes addonInstance;
@@ -48,8 +48,6 @@ public class Recipes extends BreweryAddon {
             getAddonLogger().info("This addon uses PersistentDataContainers (PDC) which were added in API version 1.14.1. This addon is not compatible with your server version: &7(" + mcV.getVersion() + ")");
         }
 
-
-        commandManager = new CommandManager(getBreweryPlugin());
 
         BreweryPlugin.getScheduler().runTaskLater(() -> {
             switch (PermissionSetter.valueOf(Config.get().getString("recipe-saving-method").toUpperCase())) {
@@ -69,7 +67,7 @@ public class Recipes extends BreweryAddon {
 
         events = new Events(getBreweryPlugin());
         Bukkit.getPluginManager().registerEvents(events, getBreweryPlugin());
-        registerCommand(true);
+        com.dre.brewery.commands.CommandManager.addSubCommand("recipes", new AddonCommandManager(getBreweryPlugin()));
 
         RecipeUtil.loadAllRecipes();
         getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
@@ -85,7 +83,7 @@ public class Recipes extends BreweryAddon {
         if (events != null) {
             HandlerList.unregisterAll(events);
         }
-        unregisterCommand();
+        com.dre.brewery.commands.CommandManager.removeSubCommand("recipes");
         getAddonLogger().info("Recipes addon disabled.");
     }
 
@@ -94,7 +92,6 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         RecipeUtil.loadAllRecipes();
         Util.reloadPrefix();
-        registerCommand(false);
         getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
     }
 
@@ -111,23 +108,6 @@ public class Recipes extends BreweryAddon {
     }
 
 
-    private void registerCommand(boolean startup) { // edit this probably
-        if (!startup) {
-            com.dre.brewery.commands.CommandManager.removeSubCommand("recipes");
-            AddonManager.unRegisterAddonCommand(commandManager);
-        }
-
-        if (Config.get().getBoolean("use-brewery-subcommand")) {
-            com.dre.brewery.commands.CommandManager.addSubCommand("recipes", commandManager);
-        } else {
-            AddonManager.registerAddonCommand(commandManager);
-        }
-    }
-
-    private void unregisterCommand() {
-        com.dre.brewery.commands.CommandManager.removeSubCommand("recipes");
-        AddonManager.unRegisterAddonCommand(commandManager);
-    }
 
     private void goToDefaultPermissionMethod() {
         Config.get().set("recipe-saving-method", "Command");

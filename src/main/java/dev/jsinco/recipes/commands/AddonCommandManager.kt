@@ -1,7 +1,6 @@
 package dev.jsinco.recipes.commands
 
 import com.dre.brewery.BreweryPlugin
-import com.dre.brewery.api.addons.AddonCommand
 import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.commands.subcommands.GiveBook
 import dev.jsinco.recipes.commands.subcommands.GiveRecipeItem
@@ -10,32 +9,15 @@ import dev.jsinco.recipes.commands.subcommands.OpenRecipeBookCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
-class CommandManager(val plugin: BreweryPlugin) : com.dre.brewery.commands.SubCommand, AddonCommand(
-    "breweryrecipes",
-    "BreweryRecipes command",
-    "",
-    emptyList(),
-) {
+class AddonCommandManager(val plugin: BreweryPlugin) : com.dre.brewery.commands.SubCommand {
 
     private val commands: Map<String, SubCommand> = mapOf(
         "give" to GiveRecipeItem(),
         "givebook" to GiveBook(),
         "gui" to GuiCommand(),
-        "openrecipebook" to OpenRecipeBookCommand(),
+        "openrecipebook" to OpenRecipeBookCommand()
     )
 
-
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): MutableList<String> {
-        return tabCompleteSubcommand(args, sender)
-    }
-
-    override fun execute(sender: CommandSender, name: String, args: Array<out String>): Boolean {
-        if (!sender.hasPermission(permission())) {
-            sender.sendMessage("${Util.prefix}You do not have permission to execute this command.")
-            return true
-        }
-        return executeSubcommand(args, sender)
-    }
 
     override fun execute(plugin: BreweryPlugin, sender: CommandSender, label: String, args: Array<out String>) {
         val argsAsMutable = args.toMutableList()
