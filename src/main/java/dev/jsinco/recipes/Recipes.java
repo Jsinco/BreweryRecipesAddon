@@ -3,9 +3,7 @@ package dev.jsinco.recipes;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.addons.AddonFileManager;
 import com.dre.brewery.api.addons.AddonInfo;
-import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.api.addons.BreweryAddon;
-import com.dre.brewery.commands.CommandManager;
 import com.dre.brewery.utility.MinecraftVersion;
 import dev.jsinco.recipes.commands.AddonCommandManager;
 import dev.jsinco.recipes.listeners.Events;
@@ -25,7 +23,7 @@ import org.bukkit.event.HandlerList;
 
 @AddonInfo(
         author = "Jsinco",
-        version = "1.14",
+        version = "1.15",
         description = "A unique way to collect and view recipes for brews",
         name = "Recipes"
 )
