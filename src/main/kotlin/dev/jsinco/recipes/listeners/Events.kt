@@ -2,6 +2,7 @@ package dev.jsinco.recipes.listeners
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.api.events.brew.BrewModifyEvent
+import com.dre.brewery.recipe.BRecipe
 import com.dre.brewery.utility.Logging
 import dev.jsinco.recipes.Recipes
 import dev.jsinco.recipes.configuration.RecipesConfig
@@ -114,18 +115,19 @@ class Events(private val plugin: BreweryPlugin) : Listener {
             return
         }
 
-        val bRecipe = event.brew.currentRecipe
-        val recipeKey: String = bRecipe.id
+        val bRecipe: BRecipe? = event.brew.currentRecipe
 
         if (config.learnRecipeUponCreation && config.requireRecipePermissionToBrew) {
             Logging.errorLog("You have two conflicting options enabled: `learnRecipeUponCreation` and `requireRecipePermissionToBrew`. Please disable one of them.")
             return
         }
 
-        if (config.learnRecipeUponCreation) {
-            handleLearnUponRecipeCreation(player, recipeKey)
-        } else if (config.requireRecipePermissionToBrew) {
-            handleRequireRecipePermissionToBrew(player, recipeKey, event)
+        bRecipe?.id?.let {
+            if (config.learnRecipeUponCreation) {
+                handleLearnUponRecipeCreation(player, it)
+            } else if (config.requireRecipePermissionToBrew) {
+                handleRequireRecipePermissionToBrew(player, it, event)
+            }
         }
     }
 
