@@ -9,10 +9,11 @@ import dev.jsinco.recipes.recipe.process.steps.CookStep
 import dev.jsinco.recipes.recipe.process.steps.DistillStep
 import dev.jsinco.recipes.recipe.process.steps.MixStep
 import java.util.*
+import java.util.Collections.synchronizedMap
 
 class RecipeCompletionManager(private val storageImpl: StorageImpl) : PersistencyLinkedCache {
 
-    val backing = mutableMapOf<UUID, MutableMap<String, BreweryRecipe>>()
+    val backing = synchronizedMap(mutableMapOf<UUID, MutableMap<String, BreweryRecipe>>())
 
     fun insertOrUpdateRecipeCompletion(uuid: UUID, recipe: BreweryRecipe) {
         val existing = backing[uuid]?.get(recipe.identifier)
@@ -30,7 +31,9 @@ class RecipeCompletionManager(private val storageImpl: StorageImpl) : Persistenc
         }
         storageImpl.completedRecipeSession()
             .insertOrUpdateRecipeCompletion(uuid, recipe)
-        backing.computeIfAbsent(uuid) { mutableMapOf() }[recipe.identifier] = recipe
+        synchronized(backing) {
+            backing.computeIfAbsent(uuid) { mutableMapOf() }[recipe.identifier] = recipe
+        }
         BreweryRecipes.recipeGuiItemCache.invalidate(uuid, recipe.identifier)
     }
 
