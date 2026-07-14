@@ -4,13 +4,14 @@ import dev.jsinco.recipes.BreweryRecipes
 import dev.jsinco.recipes.data.PersistencyLinkedCache
 import dev.jsinco.recipes.data.storage.StorageImpl
 import java.util.*
+import java.util.Collections.synchronizedMap
 
 class RecipeViewManager(private val storageImpl: StorageImpl) : PersistencyLinkedCache {
     companion object {
         const val CACHE_LIFETIME: Int = 60000 // ms
     }
 
-    val backing: MutableMap<UUID, MutableList<RecipeView>> = mutableMapOf()
+    val backing: MutableMap<UUID, MutableList<RecipeView>> = synchronizedMap(mutableMapOf())
 
     override fun initiateCacheFor(playerUuid: UUID) {
         if (backing.contains(playerUuid)) {
@@ -43,21 +44,19 @@ class RecipeViewManager(private val storageImpl: StorageImpl) : PersistencyLinke
     }
 
     fun insertOrMergeView(playerUuid: UUID, incoming: RecipeView) {
-        val list = backing.computeIfAbsent(playerUuid) { mutableListOf() }
-        val idx = list.indexOfFirst { it.recipeIdentifier == incoming.recipeIdentifier }
-
-        if (idx < 0) {
-            val minimalized = RecipeViewLoreWriter.clearRedundantFlaws(incoming)
-            list.add(minimalized) // No existing view for this recipe yet, add one
-            storageImpl.recipeViewSession().insertOrUpdateRecipeView(playerUuid, minimalized)
-            BreweryRecipes.recipeGuiItemCache.invalidate(playerUuid, minimalized.recipeIdentifier)
-            return
+        val minimalized = synchronized(backing) {
+            val list = backing.computeIfAbsent(playerUuid) { mutableListOf() }
+            val idx = list.indexOfFirst { it.recipeIdentifier == incoming.recipeIdentifier }
+            if (idx < 0) {
+                val minimalized = RecipeViewLoreWriter.clearRedundantFlaws(incoming)
+                list.add(minimalized) // No existing view for this recipe yet, add one
+                return@synchronized minimalized
+            }
+            val existing = list[idx]
+            val merged = RecipeViewLoreWriter.mergeFlaws(existing, incoming)
+            val minimalized = RecipeViewLoreWriter.clearRedundantFlaws(merged)
+            return@synchronized minimalized
         }
-
-        val existing = list[idx]
-        val merged = RecipeViewLoreWriter.mergeFlaws(existing, incoming)
-        val minimalized = RecipeViewLoreWriter.clearRedundantFlaws(merged)
-        list[idx] = minimalized // replace in memory, just to be sure
         storageImpl.recipeViewSession().insertOrUpdateRecipeView(playerUuid, minimalized)
         BreweryRecipes.recipeGuiItemCache.invalidate(playerUuid, minimalized.recipeIdentifier)
     }

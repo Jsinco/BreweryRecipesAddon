@@ -56,7 +56,7 @@ data class TheBrewingProjectListener(val api: TheBrewingProjectApi) : Listener {
             .withMeta(COMPLETED_SCORE_KEY, MetaDataType.DOUBLE, scoreValue)
         BreweryRecipes.completedRecipeManager.insertOrUpdateRecipeCompletion(
             player.uniqueId,
-            TBPRecipeConverter.convert(recipe.recipeName, brew.steps, score = scoreValue)
+            TBPRecipeConverter.convert(recipe.recipeName, brew.completedSteps, score = scoreValue)
         )
         return brewModified
     }

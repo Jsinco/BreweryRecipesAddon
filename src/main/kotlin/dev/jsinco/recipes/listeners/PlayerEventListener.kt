@@ -10,11 +10,12 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
+import java.util.Collections.synchronizedMap
 
 class PlayerEventListener(
     private vararg val persistencyLinkedCaches: PersistencyLinkedCache
 ) : Listener {
-    val forRemoval: MutableMap<UUID, Long> = mutableMapOf()
+    val forRemoval: MutableMap<UUID, Long> = synchronizedMap(mutableMapOf())
 
     @EventHandler
     fun onPlayerPlayerConnectionValidateLogin(event: PlayerConnectionValidateLoginEvent) {

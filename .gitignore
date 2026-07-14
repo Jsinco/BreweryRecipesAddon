@@ -39,4 +39,5 @@ bin/
 .DS_Store
 
 run/
+run-folia/
 /.kotlin/sessions

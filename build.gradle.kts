@@ -102,7 +102,7 @@ tasks {
         minecraftVersion("1.21.11")
         downloadPlugins {
             if (project.findProperty("testing.with.tbp")!! == "true") {
-                modrinth("thebrewingproject", "3.1.0")
+                modrinth("thebrewingproject", "3.3.1")
             } else {
                 modrinth("breweryx", "3.6.0")
             }
@@ -115,9 +115,20 @@ tasks {
     }
 }
 
+runPaper.folia.registerTask {
+    runDirectory.set(File("run-folia"))
+    downloadPlugins {
+        if (project.findProperty("testing.with.tbp")!! == "true") {
+            modrinth("thebrewingproject", "3.3.1")
+        } else {
+            modrinth("breweryx", "3.6.0")
+        }
+    }
+}
+
 bukkit {
     main = "dev.jsinco.recipes.BreweryRecipes"
-    foliaSupported = false
+    foliaSupported = true
     apiVersion = "1.21"
     authors = listOf("Jsinco", "Thorinwasher, Mitality")
     name = rootProject.name

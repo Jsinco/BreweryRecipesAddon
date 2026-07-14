@@ -1,13 +1,13 @@
 package dev.jsinco.recipes.gui
 
 import dev.jsinco.recipes.data.PersistencyLinkedCache
-import java.util.Optional
-import java.util.UUID
+import java.util.*
+import java.util.Collections.synchronizedMap
 
 class RecipeGuiItemCache : PersistencyLinkedCache {
 
-    private val playerCache: MutableMap<UUID, MutableMap<String, Optional<GuiItem>>> = mutableMapOf()
-    private val adminCache: MutableMap<String, Optional<GuiItem>> = mutableMapOf()
+    private val playerCache: MutableMap<UUID, MutableMap<String, Optional<GuiItem>>> = synchronizedMap(mutableMapOf())
+    private val adminCache: MutableMap<String, Optional<GuiItem>> = synchronizedMap(mutableMapOf())
 
     fun resolve(
         playerUuid: UUID,
@@ -17,12 +17,14 @@ class RecipeGuiItemCache : PersistencyLinkedCache {
         builder: () -> GuiItem?
     ): GuiItem? {
         val cacheKey = "${mode.identifier()}:$recipeIdentifier"
-        val target = if (admin) {
-            adminCache
+        return if (admin) {
+            adminCache.getOrPut(cacheKey) { Optional.ofNullable(builder()) }.orElse(null)
         } else {
-            playerCache.getOrPut(playerUuid) { mutableMapOf() }
+            synchronized(playerCache) {
+                playerCache.getOrPut(playerUuid) { mutableMapOf() }
+                    .getOrPut(cacheKey) { Optional.ofNullable(builder()) }.orElse(null)
+            }
         }
-        return target.getOrPut(cacheKey) { Optional.ofNullable(builder()) }.orElse(null)
     }
 
     fun invalidate(playerUuid: UUID, recipeIdentifier: String) {
