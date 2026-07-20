@@ -2,6 +2,9 @@ package dev.jsinco.recipes.configuration
 
 import com.google.common.base.Preconditions
 import com.google.common.collect.ImmutableMap
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.translation.MiniMessageTranslator
 import java.io.*
@@ -16,20 +19,22 @@ import java.util.*
 class RecipesTranslator(private val localeDirectory: File, private var lang: Locale) : MiniMessageTranslator() {
 
     private var translations: Map<Locale, Properties>
+    private var clientSideTranslations: Properties
 
     init {
         syncLangFiles()
         translations = loadLangFiles()
+        clientSideTranslations = readClientTranslations();
     }
 
     fun reload() {
         syncLangFiles()
         translations = loadLangFiles()
+        clientSideTranslations = readClientTranslations();
     }
 
     private fun syncLangFiles() {
         check(!(!localeDirectory.exists() && !localeDirectory.mkdirs())) { "Failed to create locale directory at " + localeDirectory.absolutePath }
-
         try {
             val resources = javaClass.getClassLoader().getResources("locale")
             while (resources.hasMoreElements()) {
@@ -53,6 +58,25 @@ class RecipesTranslator(private val localeDirectory: File, private var lang: Loc
             throw RuntimeException("Failed to sync language files", e)
         }
         // special thanks to StackOverflow and other useful sites lol
+    }
+
+    private fun readClientTranslations(): Properties {
+        val output = Properties()
+        RecipesTranslator::class.java.getResourceAsStream("/lang/${lang.toLanguageTag()}.json")?.use {
+            InputStreamReader(it).use { reader ->
+                val json = JsonParser.parseReader(reader)
+                if (json !is JsonObject) {
+                    return@use
+                }
+                json.asMap().forEach { (key, value) ->
+                    if (value !is JsonPrimitive || !value.isString) {
+                        return@forEach
+                    }
+                    output[key] = value.asString
+                }
+            }
+        }
+        return output
     }
 
     @Throws(IOException::class)
@@ -117,7 +141,7 @@ class RecipesTranslator(private val localeDirectory: File, private var lang: Loc
         return lines
     }
 
-    private fun loadLangFiles() : Map<Locale, Properties> {
+    private fun loadLangFiles(): Map<Locale, Properties> {
         require(localeDirectory.isDirectory()) { "Locale directory is not a directory!" }
         val translationsBuilder = ImmutableMap.Builder<Locale, Properties>()
         for (translationFile in localeDirectory.listFiles { file: File? ->
@@ -127,7 +151,8 @@ class RecipesTranslator(private val localeDirectory: File, private var lang: Loc
                 Files.newBufferedReader(translationFile.toPath(), StandardCharsets.UTF_8).use { reader ->
                     val translation = Properties()
                     translation.load(reader)
-                    val locale = Locale.forLanguageTag(translationFile.getName().replace(".lang.properties$".toRegex(), ""))
+                    val locale =
+                        Locale.forLanguageTag(translationFile.getName().replace(".lang.properties$".toRegex(), ""))
                     if (locale != null) {
                         translationsBuilder.put(locale, translation)
                     }
@@ -148,9 +173,13 @@ class RecipesTranslator(private val localeDirectory: File, private var lang: Loc
         return Key.key("breweryrecipes:global_translator")
     }
 
-    public override fun getMiniMessageString(key: String, locale: Locale): String? {
+    override fun getMiniMessageString(key: String, locale: Locale): String? {
         val translation: Properties? = this.translations[lang]
         Preconditions.checkState(translation != null, "Should have found a translation!")
         return translation!!.getProperty(key)
+    }
+
+    fun findClientSideTranslation(key: String): String? {
+        return clientSideTranslations.getProperty(key)
     }
 }

@@ -38,7 +38,12 @@ object RecipeViewLoreWriter {
         version++
     }
 
-    fun writeLore(recipeView: RecipeView, brewingIntegration: BrewingIntegration, stepsOverride: List<Step>? = null, isBrewNote: Boolean = false): List<Component>? {
+    fun writeLore(
+        recipeView: RecipeView,
+        brewingIntegration: BrewingIntegration,
+        stepsOverride: List<Step>? = null,
+        isBrewNote: Boolean = false
+    ): List<Component>? {
         cookingMinuteTicks = brewingIntegration.cookingMinuteTicks()
         agingYearTicks = brewingIntegration.agingYearTicks()
         val recipe = BreweryRecipes.brewingIntegration.getRecipe(recipeView.recipeIdentifier) ?: return null
@@ -97,7 +102,7 @@ object RecipeViewLoreWriter {
                             ?.let { TextColor.color(it.asRGB()) }
                             ?.let { Tag.styling(it) }
                             ?: Tag.selfClosingInserting(Component.empty())
-                        else Tag.selfClosingInserting(Component.empty())
+                    else Tag.selfClosingInserting(Component.empty())
                     val ingredientComp = Component.translatable(
                         "breweryrecipes.gui.recipes.lore.step.ingredient",
                         Argument.tagResolver(
@@ -116,22 +121,50 @@ object RecipeViewLoreWriter {
             }
 
             when (step) {
-                is CookStep -> step.cauldronType?.let { result.add(TranslationUtil.render(applyFlaws(buildTypeLine(
-                    "breweryrecipes.gui.recipes.lore.step.cauldron",
-                    "breweryrecipes.gui.recipes.lore.step.cauldron.type.${it.name.lowercase(Locale.ROOT)}",
-                    "cauldron_type"
-                ), index, recipeView.flaws, recipeView.invertedReveals))) }
-                is MixStep -> step.cauldronType?.let { result.add(TranslationUtil.render(applyFlaws(buildTypeLine(
-                    "breweryrecipes.gui.recipes.lore.step.cauldron",
-                    "breweryrecipes.gui.recipes.lore.step.cauldron.type.${it.name.lowercase(Locale.ROOT)}",
-                    "cauldron_type"
-                ), index, recipeView.flaws, recipeView.invertedReveals))) }
+                is CookStep -> step.cauldronType?.let {
+                    result.add(
+                        TranslationUtil.render(
+                            applyFlaws(
+                                buildTypeLine(
+                                    "breweryrecipes.gui.recipes.lore.step.cauldron",
+                                    "breweryrecipes.gui.recipes.lore.step.cauldron.type.${it.name.lowercase(Locale.ROOT)}",
+                                    "cauldron_type"
+                                ), index, recipeView.flaws, recipeView.invertedReveals
+                            )
+                        )
+                    )
+                }
+
+                is MixStep -> step.cauldronType?.let {
+                    result.add(
+                        TranslationUtil.render(
+                            applyFlaws(
+                                buildTypeLine(
+                                    "breweryrecipes.gui.recipes.lore.step.cauldron",
+                                    "breweryrecipes.gui.recipes.lore.step.cauldron.type.${it.name.lowercase(Locale.ROOT)}",
+                                    "cauldron_type"
+                                ), index, recipeView.flaws, recipeView.invertedReveals
+                            )
+                        )
+                    )
+                }
+
                 is AgeStep -> {
-                    result.add(TranslationUtil.render(applyFlaws(buildTypeLine(
-                        "breweryrecipes.gui.recipes.lore.step.barrel",
-                        "breweryrecipes.gui.recipes.lore.step.barrel.type.${step.barrelType.name.lowercase(Locale.ROOT)}",
-                        "barrel_type"
-                    ), index, recipeView.flaws, recipeView.invertedReveals)))
+                    result.add(
+                        TranslationUtil.render(
+                            applyFlaws(
+                                buildTypeLine(
+                                    "breweryrecipes.gui.recipes.lore.step.barrel",
+                                    "breweryrecipes.gui.recipes.lore.step.barrel.type.${
+                                        step.barrelType.name.lowercase(
+                                            Locale.ROOT
+                                        )
+                                    }",
+                                    "barrel_type"
+                                ), index, recipeView.flaws, recipeView.invertedReveals
+                            )
+                        )
+                    )
                 }
             }
 
@@ -185,11 +218,16 @@ object RecipeViewLoreWriter {
     }
 
 
-private fun buildBaseStep(step: Step, isBrewNote: Boolean = false): Component {
+    private fun buildBaseStep(step: Step, isBrewNote: Boolean = false): Component {
         return TranslationUtil.render(if (isBrewNote) step.displayBrewNote() else step.display())
     }
 
-    private fun applyFlaws(component: Component, stepIndex: Int, flaws: List<Flaw>, reveals: List<Set<Int>>): Component {
+    private fun applyFlaws(
+        component: Component,
+        stepIndex: Int,
+        flaws: List<Flaw>,
+        reveals: List<Set<Int>>
+    ): Component {
         if (flaws.isEmpty()) return component
         val base = resolveTranslatablesForMutation(component)
         val textModifications = compileTextModifications(base, stepIndex, flaws)
@@ -205,7 +243,13 @@ private fun buildBaseStep(step: Step, isBrewNote: Boolean = false): Component {
         return output
     }
 
-    private fun renderStep(step: Step, stepIndex: Int, flaws: List<Flaw>, reveals: List<Set<Int>>, isBrewNote: Boolean = false): Component {
+    private fun renderStep(
+        step: Step,
+        stepIndex: Int,
+        flaws: List<Flaw>,
+        reveals: List<Set<Int>>,
+        isBrewNote: Boolean = false
+    ): Component {
         return applyFlaws(buildBaseStep(step, isBrewNote), stepIndex, flaws, reveals)
     }
 
@@ -340,21 +384,13 @@ private fun buildBaseStep(step: Step, isBrewNote: Boolean = false): Component {
                 if (rendered !is TranslatableComponent) {
                     resolveTranslatablesForMutation(rendered).style(withChildren.style())
                 } else {
-                    Component.text(humanizeTranslationKey(withChildren.key()))
-                        .style(withChildren.style())
+                    Component.text(
+                        BreweryRecipes.instance.translator?.findClientSideTranslation(rendered.key()) ?: rendered.key()
+                    )
                 }
             }
 
             else -> withChildren
-        }
-    }
-
-    private fun humanizeTranslationKey(key: String): String {
-        // e.g. "block.minecraft.short_grass" -> "Short Grass"
-        val part = key.substringAfterLast('.')
-        if (part.isEmpty()) return key
-        return part.split('_').joinToString(" ") { w ->
-            w.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ENGLISH) else it.toString() }
         }
     }
 
